@@ -1,0 +1,28 @@
+"*":
+  "atom-typescript":
+    debugAtomTs: true
+    showSemanticView: true
+  "browser-plus": {}
+  core:
+    themes: [
+      "atom-dark-ui"
+      "atom-dark-syntax"
+    ]
+  editor:
+    fontSize: 18
+    invisibles: {}
+  emmet: {}
+  "exception-reporting":
+    userId: "a1fa3544-a7c8-d697-ad0a-515560216a8e"
+  "go-plus":
+    goPath: "~/go"
+    lintOnSave: false
+  linter: {}
+  "linter-jshint":
+    disableWhenNoJshintrcFileInPath: true
+  "linter-tslint":
+    tslintExecutablePath: "/usr/local/bin/tslint"
+  react: {}
+  "tree-view": {}
+  welcome:
+    showOnStartup: false
