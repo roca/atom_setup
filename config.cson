@@ -9,7 +9,7 @@
       "atom-dark-syntax"
     ]
   editor:
-    fontSize: 18
+    fontSize: 20
     invisibles: {}
   emmet: {}
   "exception-reporting":
@@ -17,7 +17,8 @@
   "go-plus":
     goPath: "~/go"
     lintOnSave: false
-  linter: {}
+  linter:
+    errorPanelHeight: 146
   "linter-jshint":
     disableWhenNoJshintrcFileInPath: true
   "linter-tslint":
