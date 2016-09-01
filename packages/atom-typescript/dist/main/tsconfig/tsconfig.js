@@ -16,6 +16,7 @@ var compilerOptionsValidation = {
     experimentalAsyncFunctions: { type: types.boolean },
     experimentalDecorators: { type: types.boolean },
     emitDecoratorMetadata: { type: types.boolean },
+    forceConsistentCasingInFileNames: { type: types.boolean },
     help: { type: types.boolean },
     inlineSourceMap: { type: types.boolean },
     inlineSources: { type: types.boolean },
@@ -26,6 +27,9 @@ var compilerOptionsValidation = {
     mapRoot: { type: types.string },
     module: { type: types.string, validValues: ['commonjs', 'amd', 'system', 'umd', 'es6', 'es2015'] },
     moduleResolution: { type: types.string, validValues: ['classic', 'node'] },
+    baseUrl: { type: types.string },
+    paths: { type: types.object },
+    rootDirs: { type: types.object },
     newLine: { type: types.string },
     noEmit: { type: types.boolean },
     noEmitHelpers: { type: types.boolean },
@@ -33,26 +37,36 @@ var compilerOptionsValidation = {
     noErrorTruncation: { type: types.boolean },
     noFallthroughCasesInSwitch: { type: types.boolean },
     noImplicitAny: { type: types.boolean },
+    noImplicitThis: { type: types.boolean },
     noImplicitUseStrict: { type: types.boolean },
     noImplicitReturns: { type: types.boolean },
     noLib: { type: types.boolean },
     noLibCheck: { type: types.boolean },
     noResolve: { type: types.boolean },
+    noUnusedLocals: { type: types.boolean },
+    noUnusedParameters: { type: types.boolean },
     out: { type: types.string },
     outFile: { type: types.string },
     outDir: { type: types.string },
     preserveConstEnums: { type: types.boolean },
+    pretty: { type: types.boolean },
+    project: { type: types.string },
+    reactNamespace: { type: types.string },
     removeComments: { type: types.boolean },
     rootDir: { type: types.string },
     skipDefaultLibCheck: { type: types.boolean },
     sourceMap: { type: types.boolean },
     sourceRoot: { type: types.string },
+    strictNullChecks: { type: types.boolean },
     stripInternal: { type: types.boolean },
     suppressExcessPropertyErrors: { type: types.boolean },
     suppressImplicitAnyIndexErrors: { type: types.boolean },
     target: { type: types.string, validValues: ['es3', 'es5', 'es6', 'es2015'] },
+    typeRoots: { type: types.array },
+    types: { type: types.object },
     version: { type: types.boolean },
     watch: { type: types.boolean },
+    lib: { type: types.array }
 };
 var validator = new simpleValidator.SimpleValidator(compilerOptionsValidation);
 exports.errors = {
@@ -162,6 +176,14 @@ function rawToTsCompilerOptions(jsonOptions, projectDir) {
     if (compilerOptions.outFile !== undefined) {
         compilerOptions.outFile = path.resolve(projectDir, compilerOptions.outFile);
     }
+    if (compilerOptions.baseUrl !== undefined) {
+        compilerOptions.baseUrl = path.resolve(projectDir, compilerOptions.baseUrl);
+    }
+    if (compilerOptions.rootDirs !== undefined && Array.isArray(compilerOptions.rootDirs)) {
+        compilerOptions.rootDirs = compilerOptions.rootDirs.map(function (dir) {
+            return path.resolve(projectDir, dir);
+        });
+    }
     return compilerOptions;
 }
 function tsToRawCompilerOptions(compilerOptions) {
@@ -188,7 +210,7 @@ function getDefaultInMemoryProject(srcFile) {
         compileOnSave: true,
         buildOnSave: false,
         scripts: {},
-        atom: { rewriteTsconfig: true, formatOnSave: false },
+        atom: { rewriteTsconfig: false, formatOnSave: false },
     };
     return {
         projectFileDirectory: dir,
@@ -224,7 +246,7 @@ function getProjectSync(pathOrSrcFile) {
     }
     if (!projectSpec.atom) {
         projectSpec.atom = {
-            rewriteTsconfig: true,
+            rewriteTsconfig: false,
         };
     }
     if (projectSpec.filesGlob) {
@@ -260,7 +282,7 @@ function getProjectSync(pathOrSrcFile) {
         externalTranspiler: projectSpec.externalTranspiler == undefined ? undefined : projectSpec.externalTranspiler,
         scripts: projectSpec.scripts || {},
         buildOnSave: !!projectSpec.buildOnSave,
-        atom: { rewriteTsconfig: true, formatOnSave: !!projectSpec.atom.formatOnSave }
+        atom: { rewriteTsconfig: false, formatOnSave: !!projectSpec.atom.formatOnSave }
     };
     var validationResult = validator.validate(projectSpec.compilerOptions);
     if (validationResult.errorMessage) {

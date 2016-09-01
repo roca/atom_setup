@@ -1,6 +1,6 @@
 {
   "name": "language-elm",
-  "version": "1.3.3",
+  "version": "1.5.0",
   "description": "Syntax highlighting and autocompletion for the language Elm",
   "repository": {
     "type": "git",
@@ -41,16 +41,16 @@
     "url": "https://github.com/edubkendo/atom-elm/issues"
   },
   "homepage": "https://github.com/edubkendo/atom-elm#readme",
-  "_id": "language-elm@1.3.3",
-  "_shasum": "d1d5c28a16dc21059b9086e86d331ffb4b9e743b",
-  "_resolved": "file:../d-116217-7676-1pw5iif/package.tgz",
-  "_from": "../d-116217-7676-1pw5iif/package.tgz",
+  "_id": "language-elm@1.5.0",
+  "_shasum": "50819750b010ddcc4b205aac0767d7697e683cb3",
+  "_resolved": "file:../d-116520-8276-17i5q3j/package.tgz",
+  "_from": "../d-116520-8276-17i5q3j/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
       {
         "name": "rest",
-        "version": "1.3.1",
+        "version": "1.3.2",
         "path": "node_modules/elm-oracle/node_modules/rest/node.js"
       },
       {

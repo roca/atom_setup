@@ -21,21 +21,40 @@
     'name': 'constant.language.empty-list.elm'
   }
   {
-    'begin': '^\\b(module)\\s+'
+    'begin': '^\\b((effect|port)\\s+)?(module)\\s+'
     'beginCaptures':
       '1':
         'name': 'keyword.other.elm'
-    'end': '\\b(where)\\b'
-    'endCaptures':
-      '1':
+      '3':
         'name': 'keyword.other.elm'
+    'end': '$|;'
     'name': 'meta.declaration.module.elm'
     'patterns': [
       {
         'include': '#module_name'
       }
       {
+        'begin': '(where)\\s*\\{'
+        'beginCaptures':
+          '1':
+            'name': 'keyword.other.elm'
+        'end': '\\}'
+        'patterns': [
+          {
+            'include': '#type_signature'
+          }
+        ]
+      }
+      {
+        'match': '(exposing)'
+        'name': 'keyword.other.elm'
+      }
+      {
         'include': '#module_exports'
+      }
+      {
+        'match': '(where)'
+        'name': 'keyword.other.elm'
       }
       {
         'match': '[a-z]+'

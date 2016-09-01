@@ -1,7 +1,6 @@
 {
   "name": "emmet-snippets-compatibility",
-  "main": "./lib/emmet-snippets-compatibility",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Gives Atom autocomplete-snippets primary tab function over emmet. Adds emmet php compatibility",
   "keywords": [
     "emmet",
@@ -25,17 +24,14 @@
     "url": "https://github.com/peterjohnhunt/emmet-snippets-compatibility/issues"
   },
   "homepage": "https://github.com/peterjohnhunt/emmet-snippets-compatibility#readme",
-  "_id": "emmet-snippets-compatibility@1.0.4",
-  "_shasum": "f78813a2fef0d321ee2111757e2f465501310a8d",
-  "_resolved": "file:../d-116217-7655-15g9fhf/package.tgz",
-  "_from": "../d-116217-7655-15g9fhf/package.tgz",
+  "_id": "emmet-snippets-compatibility@1.0.6",
+  "_shasum": "7b06ff8d028c8a765ae74775142d1affd2dfac49",
+  "_resolved": "file:../d-11642-4814-j5h0v/package.tgz",
+  "_from": "../d-11642-4814-j5h0v/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [],
     "extensions": {
-      ".coffee": [
-        "lib/emmet-snippets-compatibility.coffee"
-      ],
       ".json": [
         "package.json"
       ]

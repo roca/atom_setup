@@ -23,6 +23,7 @@
     ],
     "files": [
         "./globals.ts",
+        "./hyperclickProvider.ts",
         "./linter.ts",
         "./main/atom/atomConfig.ts",
         "./main/atom/atomUtils.ts",
@@ -58,6 +59,7 @@
         "./main/atom/views/simpleOverlaySelectionView.ts",
         "./main/atom/views/simpleSelectionView.ts",
         "./main/atom/views/tooltipView.ts",
+        "./main/atom/views/typeOverlayView.ts",
         "./main/atom/views/view.ts",
         "./main/atomts.ts",
         "./main/bin/atbuild.ts",
@@ -92,6 +94,7 @@
         "./main/lang/transformers/implementations/nullTransformer.ts",
         "./main/lang/transformers/transformer.ts",
         "./main/lang/transformers/transformerRegistry.ts",
+        "./main/lang/typescriptServices.ts",
         "./main/lang/utils.ts",
         "./main/react/htmltotsx.ts",
         "./main/tsconfig/dts-generator.ts",

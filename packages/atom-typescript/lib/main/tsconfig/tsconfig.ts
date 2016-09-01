@@ -29,6 +29,7 @@ interface CompilerOptions {
     experimentalAsyncFunctions?: boolean;
     experimentalDecorators?: boolean;                 // Experimental. Needed for the next option `emitDecoratorMetadata` see : https://github.com/Microsoft/TypeScript/pull/3330
     emitDecoratorMetadata?: boolean;                  // Experimental. Emits addition type information for this reflection API https://github.com/rbuckton/ReflectDecorators
+    forceConsistentCasingInFileNames?: boolean;
     help?: boolean;
     isolatedModules?: boolean;
     inlineSourceMap?: boolean;
@@ -39,6 +40,9 @@ interface CompilerOptions {
     mapRoot?: string;                                 // Optionally Specifies the location where debugger should locate map files after deployment
     module?: string;
     moduleResolution?: string;
+    baseUrl?: string;
+    paths?: { [pattern: string]: string[] };
+    rootDirs?: string[];
     newLine?: string;
     noEmit?: boolean;
     noEmitHelpers?: boolean;
@@ -47,14 +51,20 @@ interface CompilerOptions {
     noFallthroughCasesInSwitch?: boolean;
     noImplicitAny?: boolean;                          // Error on inferred `any` type
     noImplicitReturns?: boolean;
+    noImplicitThis?: boolean;
     noImplicitUseStrict?: boolean;
     noLib?: boolean;
     noLibCheck?: boolean;
     noResolve?: boolean;
-    out?: string;
+    noUnusedLocals?: boolean;
+    noUnusedParameters?: boolean;
+    out?: string;                                     // Deprecated. Use outFile instead
     outFile?: string;                                 // new name for out
     outDir?: string;                                  // Redirect output structure to this directory
     preserveConstEnums?: boolean;
+    pretty?: boolean;                                 // Experimental
+    project?: string;
+    reactNamespace?: string;
     removeComments?: boolean;                         // Do not emit comments in output
     rootDir?: string;
     skipDefaultLibCheck?: boolean;
@@ -64,8 +74,11 @@ interface CompilerOptions {
     suppressExcessPropertyErrors?: boolean;           // Optionally disable strict object literal assignment checking
     suppressImplicitAnyIndexErrors?: boolean;
     target?: string;                                  // 'es3'|'es5' (default)|'es6'|'es2015'
+    typeRoots?: string[];
+    types?: string[];
     version?: boolean;
     watch?: boolean;
+    lib?: string[];
 }
 
 var compilerOptionsValidation: simpleValidator.ValidationInfo = {
@@ -82,6 +95,7 @@ var compilerOptionsValidation: simpleValidator.ValidationInfo = {
     experimentalAsyncFunctions: { type: types.boolean },
     experimentalDecorators: { type: types.boolean },
     emitDecoratorMetadata: { type: types.boolean },
+    forceConsistentCasingInFileNames: { type: types.boolean },
     help: { type: types.boolean },
     inlineSourceMap: { type: types.boolean },
     inlineSources: { type: types.boolean },
@@ -92,6 +106,9 @@ var compilerOptionsValidation: simpleValidator.ValidationInfo = {
     mapRoot: { type: types.string },
     module: { type: types.string, validValues: ['commonjs', 'amd', 'system', 'umd', 'es6', 'es2015'] },
     moduleResolution: { type: types.string, validValues: ['classic', 'node'] },
+    baseUrl: { type: types.string },
+    paths: { type: types.object },
+    rootDirs: { type: types.object },
     newLine: { type: types.string },
     noEmit: { type: types.boolean },
     noEmitHelpers: { type: types.boolean },
@@ -99,26 +116,36 @@ var compilerOptionsValidation: simpleValidator.ValidationInfo = {
     noErrorTruncation: { type: types.boolean },
     noFallthroughCasesInSwitch: { type: types.boolean },
     noImplicitAny: { type: types.boolean },
+    noImplicitThis: { type: types.boolean },
     noImplicitUseStrict: { type: types.boolean },
     noImplicitReturns: { type: types.boolean },
     noLib: { type: types.boolean },
     noLibCheck: { type: types.boolean },
     noResolve: { type: types.boolean },
+    noUnusedLocals: { type: types.boolean },
+    noUnusedParameters: { type: types.boolean },
     out: { type: types.string },
     outFile: { type: types.string },
     outDir: { type: types.string },
     preserveConstEnums: { type: types.boolean },
+    pretty: { type: types.boolean },
+    project: { type: types.string },
+    reactNamespace: { type: types.string },
     removeComments: { type: types.boolean },
     rootDir: { type: types.string },
     skipDefaultLibCheck: { type: types.boolean },
     sourceMap: { type: types.boolean },
     sourceRoot: { type: types.string },
+    strictNullChecks: { type: types.boolean },
     stripInternal: { type: types.boolean },
     suppressExcessPropertyErrors: { type: types.boolean },
     suppressImplicitAnyIndexErrors: { type: types.boolean },
     target: { type: types.string, validValues: ['es3', 'es5', 'es6', 'es2015'] },
+    typeRoots: { type: types.array },
+    types: { type: types.object },
     version: { type: types.boolean },
     watch: { type: types.boolean },
+    lib: { type: types.array }
 }
 var validator = new simpleValidator.SimpleValidator(compilerOptionsValidation);
 
@@ -233,7 +260,7 @@ var defaultFilesGlob = [
     "!node_modules/**",
 ];
 /**
- * This is what we use when the user doens't specify a files / filesGlob
+ * This is what we use when the user doesn't specify a files / filesGlob
  */
 var invisibleFilesGlob = '{**/*.ts,**/*.tsx}';
 
@@ -327,6 +354,16 @@ function rawToTsCompilerOptions(jsonOptions: CompilerOptions, projectDir: string
         compilerOptions.outFile = path.resolve(projectDir, compilerOptions.outFile);
     }
 
+    if (compilerOptions.baseUrl !== undefined) {
+        compilerOptions.baseUrl = path.resolve(projectDir, compilerOptions.baseUrl);
+    }
+
+    if (compilerOptions.rootDirs !== undefined && Array.isArray(compilerOptions.rootDirs)) {
+        compilerOptions.rootDirs = compilerOptions.rootDirs.map(function(dir) {
+            return path.resolve(projectDir, dir)
+        });
+    }
+
     return compilerOptions;
 }
 
@@ -360,7 +397,7 @@ export function getDefaultInMemoryProject(srcFile: string): TypeScriptProjectFil
         compileOnSave: true,
         buildOnSave: false,
         scripts: {},
-        atom: { rewriteTsconfig: true, formatOnSave: false },
+        atom: { rewriteTsconfig: false, formatOnSave: false },
     };
 
     return {
@@ -411,7 +448,7 @@ export function getProjectSync(pathOrSrcFile: string): TypeScriptProjectFileDeta
     /** Setup defaults for atom key */
     if (!projectSpec.atom) {
         projectSpec.atom = {
-            rewriteTsconfig: true,
+            rewriteTsconfig: false,
         }
     }
 
@@ -452,7 +489,7 @@ export function getProjectSync(pathOrSrcFile: string): TypeScriptProjectFileDeta
         externalTranspiler: projectSpec.externalTranspiler == undefined ? undefined : projectSpec.externalTranspiler,
         scripts: projectSpec.scripts || {},
         buildOnSave: !!projectSpec.buildOnSave,
-        atom: { rewriteTsconfig: true, formatOnSave: !!projectSpec.atom.formatOnSave }
+        atom: { rewriteTsconfig: false, formatOnSave: !!projectSpec.atom.formatOnSave }
     };
 
     // Validate the raw compiler options before converting them to TS compiler options

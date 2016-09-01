@@ -19,6 +19,8 @@ js = [
   'jquery',
   'jqueryui',
   'jquerym',
+  'react',
+  'nodejs',
   'angularjs',
   'backbone',
   'marionette',
@@ -182,6 +184,9 @@ module.exports =
     'processing'
   ]
   'JavaScript': js
+  'LaTeX': [
+    'latex'
+  ]
   'LESS': css
   'Lisp': [
     'lisp'

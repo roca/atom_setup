@@ -1,3 +1,64 @@
+## 0.16.0
+* Add `Auto Scroll Issue Into View` option.
+* Escape html in issue.
+
+## 0.15.0
+* Add "Quick Fixes" indicator in the status bar.
+* Add lint task queue to prevent race conditions.
+* Update `atom-linter` version.
+* If a source directory is inside another, do not copy files for that source directory anymore (to the work directory).
+
+## 0.14.0
+* Undo 0.13.3!  Run a separate `elm-make` process again for each main path because there is an issue with files having the same module name.
+* Save `mainPaths` to `linter-elm-make.json` instead of `elm-package.json`.
+* Fix wrong links in README.md.
+
+## 0.13.3
+* Run only 1 `elm-make` process for multiple main paths.
+
+## 0.13.2
+* Add notification when copying files to work directory.
+
+## 0.13.0
+* Only copy source directory files to the work directory.
+* Make `Clear Project Build Artifacts` work in Windows.
+
+## 0.12.0
+* Remove `Linter Elm Make: Set Main Path`.
+* Add `Linter Elm Make: Set Main Paths` (allow more than 1 main path).
+
+## 0.11.1
+* Fix `Clear Project Build Artifacts` error when build artifacts directory does not exist.
+
+## 0.11.0
+* Add `Work Directory` option.
+
+## 0.10.1
+* Add useful error details.
+* Update `CHANGELOG.md`.
+
+## 0.10.0
+* Add `Linter Elm Make: Set Main Path`.
+* Set `Always Compile Main` default to `false`.
+
+## 0.9.0
+* On-the-fly linting 2.0.
+
+## 0.8.0
+* Add `Always Compile Main` option.
+
+## 0.7.0
+* Add option to ignore `elm-make` warnings.
+
+## 0.6.0
+* On-the-fly linting.
+
+## 0.5.0
+* Add `Linter Elm Make: Quick Fix` and `Linter Elm Make: Quick Fix All`.
+
+## 0.4.0
+* Various fixes.
+
 ## 0.3.0
 * Don't output a file on compilation.
 

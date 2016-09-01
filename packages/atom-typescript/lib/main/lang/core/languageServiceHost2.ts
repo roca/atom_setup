@@ -5,6 +5,7 @@ import os = require('os')
 import textBuffer = require('basarat-text-buffer');
 
 import tsconfig = require('../../tsconfig/tsconfig');
+import {typescriptServices} from "../typescriptServices";
 
 interface ScriptInfo {
     getFileName(): string;
@@ -203,12 +204,21 @@ function getScriptSnapShot(scriptInfo: ScriptInfo): ts.IScriptSnapshot {
     }
 }
 
-export var getDefaultLibFilePath = (options: ts.CompilerOptions) => {
-    var filename = ts.getDefaultLibFileName(options);
-    return (path.join(path.dirname(require.resolve('ntypescript')), filename)).split('\\').join('/');
+function getTypescriptLocation() {
+    if (typescriptServices) {
+        return path.dirname(typescriptServices);
+    }
+    else {
+        return path.dirname(require.resolve('ntypescript'));
+    }
 }
 
-export var typescriptDirectory = path.dirname(require.resolve('ntypescript')).split('\\').join('/');
+export var getDefaultLibFilePath = (options: ts.CompilerOptions) => {
+    var filename = ts.getDefaultLibFileName(options);
+    return (path.join(getTypescriptLocation(), filename)).split('\\').join('/');
+}
+
+export var typescriptDirectory = getTypescriptLocation().split('\\').join('/');
 
 
 // NOTES:
@@ -223,8 +233,14 @@ export class LanguageServiceHost implements ts.LanguageServiceHost {
 
     constructor(private config: tsconfig.TypeScriptProjectFileDetails) {
         // Add the `lib.d.ts`
-        if (!config.project.compilerOptions.noLib) {
+        if (!config.project.compilerOptions.noLib && !config.project.compilerOptions.lib) {
           this.addScript(getDefaultLibFilePath(config.project.compilerOptions));
+        }
+        else if (Array.isArray(config.project.compilerOptions.lib)) {
+            for (let lib of config.project.compilerOptions.lib) {
+                let filename = "lib." + lib + ".d.ts";
+                this.addScript((path.join(getTypescriptLocation(), filename)).split('\\').join('/'));
+            }
         }
     }
 

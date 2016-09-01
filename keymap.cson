@@ -25,3 +25,5 @@
 # https://github.com/bevry/cson#what-is-cson
 'atom-text-editor[data-grammar="haml text"]:not([mini])':
   'tab': 'emmet:expand-abbreviation-with-tab'
+'atom-text-editor[data-grammar~="jsx"]:not([mini])':
+  'tab': 'emmet:expand-abbreviation-with-tab'

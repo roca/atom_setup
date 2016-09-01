@@ -2,18 +2,28 @@
   "atom-typescript":
     debugAtomTs: true
     showSemanticView: true
+  "autocomplete-plus": {}
+  autosave:
+    enabled: true
   "browser-plus": {}
   core:
+    disabledPackages: [
+      "save-commands"
+    ]
     themes: [
       "atom-dark-ui"
       "atom-dark-syntax"
     ]
   editor:
-    fontSize: 20
+    fontSize: 16
     invisibles: {}
+    showIndentGuide: true
+    softWrapHangingIndent: 2
   emmet: {}
   "exception-reporting":
     userId: "a1fa3544-a7c8-d697-ad0a-515560216a8e"
+  "file-types":
+    ".js$": "source.js.jsx"
   "go-plus":
     goPath: "~/go"
     lintOnSave: false
@@ -24,6 +34,22 @@
   "linter-tslint":
     tslintExecutablePath: "/usr/local/bin/tslint"
   react: {}
-  "tree-view": {}
+  "tree-view":
+    hideVcsIgnoredFiles: false
   welcome:
     showOnStartup: false
+".js.regexp.replacement.source":
+  editor:
+    softWrapHangingIndent: 2
+".js.regexp.source":
+  editor:
+    softWrapHangingIndent: 2
+".js.source":
+  editor:
+    softWrapHangingIndent: 2
+".source.ts":
+  editor:
+    softWrapHangingIndent: 2
+".source.tsx":
+  editor:
+    softWrapHangingIndent: 2

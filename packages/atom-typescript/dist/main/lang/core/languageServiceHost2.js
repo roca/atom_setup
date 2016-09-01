@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var os = require('os');
 var textBuffer = require('basarat-text-buffer');
+var typescriptServices_1 = require("../typescriptServices");
 function createScriptInfo(fileName, text, isOpen) {
     if (isOpen === void 0) { isOpen = false; }
     var version = 1;
@@ -118,11 +119,19 @@ function getScriptSnapShot(scriptInfo) {
         getChangeRange: getChangeRange,
     };
 }
+function getTypescriptLocation() {
+    if (typescriptServices_1.typescriptServices) {
+        return path.dirname(typescriptServices_1.typescriptServices);
+    }
+    else {
+        return path.dirname(require.resolve('ntypescript'));
+    }
+}
 exports.getDefaultLibFilePath = function (options) {
     var filename = ts.getDefaultLibFileName(options);
-    return (path.join(path.dirname(require.resolve('ntypescript')), filename)).split('\\').join('/');
+    return (path.join(getTypescriptLocation(), filename)).split('\\').join('/');
 };
-exports.typescriptDirectory = path.dirname(require.resolve('ntypescript')).split('\\').join('/');
+exports.typescriptDirectory = getTypescriptLocation().split('\\').join('/');
 var LanguageServiceHost = (function () {
     function LanguageServiceHost(config) {
         var _this = this;
@@ -250,8 +259,15 @@ var LanguageServiceHost = (function () {
             return _this.config.projectFileDirectory;
         };
         this.getDefaultLibFileName = ts.getDefaultLibFileName;
-        if (!config.project.compilerOptions.noLib) {
+        if (!config.project.compilerOptions.noLib && !config.project.compilerOptions.lib) {
             this.addScript(exports.getDefaultLibFilePath(config.project.compilerOptions));
+        }
+        else if (Array.isArray(config.project.compilerOptions.lib)) {
+            for (var _i = 0, _a = config.project.compilerOptions.lib; _i < _a.length; _i++) {
+                var lib = _a[_i];
+                var filename = "lib." + lib + ".d.ts";
+                this.addScript((path.join(getTypescriptLocation(), filename)).split('\\').join('/'));
+            }
         }
     }
     return LanguageServiceHost;

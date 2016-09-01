@@ -16,10 +16,43 @@
 # This file uses CoffeeScript Object Notation (CSON).
 # If you are unfamiliar with CSON, you can read more about it here:
 # https://github.com/bevry/cson#what-is-cson
-{
-  "ruby": {
-    "filters": "haml",
-    "extends": "html",
-    "profile": "xml"
-  }
-}
+'.source.ts':
+  'Angular2 Service':
+    'prefix': 'ng2Service'
+    'body': """
+    import { Injectable } from '@angular/core';
+
+    @Injectable()
+    export class CustomerService {
+
+      constructor() {}
+
+      getCustomers() {
+        return [
+          {id: 1, name: 'Ward'},
+          {id: 2, name: 'Kevin'},
+          {id: 3, name: 'Eric'},
+          {id: 4, name: 'Sally'},
+          {id: 5, name: 'Emmet'},
+        ];
+      }
+
+    }
+    """
+  'Angular2 Component':
+    'prefix': 'ng2Component'
+    'body': """
+    import { Component, Input, OnInit } from '@angular/core';
+
+    @Component({
+        selector: 'app-customer', // <app-customer>
+        templateUrl: 'customer.component.html'
+    })
+    export class CustomerComponent implements OnInit {
+
+      @Input() customer: {id: number, name: string};
+
+      constructor() {}
+      ngOnInit() {}
+    }
+    """
